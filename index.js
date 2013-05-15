@@ -6,13 +6,20 @@
 var operator = require('tower-operator')
   , escapeRegExp = 'undefined' === typeof window
     ? require('escape-regexp-component')
-    : require('escape-regexp');
+    : require('escape-regexp')
+  , Lexer = require('./lib/lexer');
 
 /**
  * Expose `expression`.
  */
 
 exports = module.exports = expression;
+
+/**
+ * Expose `Lexer`.
+ */
+
+exports.Lexer = Lexer;
 
 /**
  * Collection
@@ -30,16 +37,26 @@ exports.Expression = Expression;
  * Parse a directive expression.
  *
  * @param {String} val
- * @return {Function} fn Expression to evaluate
- *    against the current `scope`.
+ *
+ * Usage:
+ *   ```
+ *     <li data-each="user in users, (max: 10, buffer: 2)"></li>
+ *
+ *     expression('arguments', function(args) {
+ *
+ *     });
+ *
+ *   ```
  */
 
 function expression(name, fn) {
   if (exports.collection[name])
     return exports.collection[name];
 
-
-
+  return exports.collection[name] = new Expression({
+    name: name,
+    fn: fn
+  });
 }
 
 /**
@@ -49,6 +66,5 @@ function expression(name, fn) {
  */
 
 function Expression(options) {
-
 
 }
