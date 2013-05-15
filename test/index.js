@@ -77,6 +77,21 @@ describe('expression', function(){
 
     });
 
+    it('should process parentheses', function(){
+
+      var lexer = Lexer.init()
+        .def('lp', /^\($/)
+        .def('rp', /^\)$/)
+        .string('()')
+        .start();
+        var tokens = [];
+        while(!lexer.eof) {
+          lexer.next();
+          tokens.push(lexer.token);
+        }
+        assert(tokens === lexer.tokens)
+    });
+
   });
 
   /**describe('operators', function(){
