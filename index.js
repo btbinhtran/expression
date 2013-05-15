@@ -22,6 +22,12 @@ exports = module.exports = expression;
 exports.Lexer = Lexer;
 
 /**
+ * ID used for non-named expressions
+ */
+
+exports.id = 0;
+
+/**
  * Collection
  */
 
@@ -40,6 +46,7 @@ exports.Expression = Expression;
  *
  * Usage:
  *   ```
+
  *     <li data-each="user in users, (max: 10, buffer: 2)"></li>
  *
  *     expression('arguments', function(args) {
@@ -50,6 +57,8 @@ exports.Expression = Expression;
  */
 
 function expression(name, fn) {
+  if (!name) name = id++;
+
   if (exports.collection[name])
     return exports.collection[name];
 
@@ -59,6 +68,7 @@ function expression(name, fn) {
   });
 }
 
+
 /**
  * Expression Constructor
  *
@@ -66,5 +76,17 @@ function expression(name, fn) {
  */
 
 function Expression(options) {
+  this.name = options.name;
+  this.fn = options.fn;
+
+
 
 }
+
+/**
+ * Parse a given expression.
+ */
+
+Expression.prototype.parse = function() {
+
+};
