@@ -16,7 +16,13 @@ describe('expression', function(){
   describe('lexer', function(){
 
     it('should create a new lexer', function(){
+      var lexer = Lexer.init()
+        .def('random', /$/)
+        .string(',');
 
+      assert(lexer instanceof Lexer);
+      assert(lexer.str === ',');
+      assert('object' === typeof lexer.defs['random'])
     });
 
     it('should use lexer API', function(){
