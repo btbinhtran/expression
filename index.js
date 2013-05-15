@@ -84,19 +84,41 @@ function S(options) {
  */
 
 S.prototype.parse = function(str, $scope) {
-  var _str = str;
-  str = str.split('|');
-  str = str[0];
+  var result = [];
 
   function parseBeginning(s) {
+    // Create a new lexer;
+    console.log(s);
+    var lexer = Lexer.init()
+      .def('comma', /^[\,]$/, true) // Try and skip it
+      .def('lp', /^\($/)
+      .def('rp', /^\)$/)
+      .def('key', /^[A-Za-z0-9]+[:]$/)
+      .def('string', /^[A-Za-z0-9]+(?!\:)$/)
+      .def('whitespace', /^[\t \n]$/, true)
+      .string(s)
+      .start();
+
+    while(!lexer.eof) {
+      lexer.next();
+      console.log(lexer.token, lexer.lexeme);
+    }
 
   }
 
-  function parseRest(s) {
-
+  function parsePipes(s) {
+    console.log(s);
   }
 
+  var _str = str.split('|');
 
+  parseBeginning(_str[0]);
+
+  _str.splice(0, 1);
+  if (_str.length !== 0)
+    parsePipes(_str.join(' | '));
+
+/**
   // Create a new Lexer;
   var lexer = Lexer.init()
     .def('whitespace', /^[\t \n]$/, true)
@@ -175,7 +197,7 @@ S.prototype.parse = function(str, $scope) {
     }
 
   }
-  console.log(currentContext);
+  console.log(currentContext);**/
 };
 
 s('list').parse('user in users, (max: 10)');
