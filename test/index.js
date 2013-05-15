@@ -84,12 +84,28 @@ describe('expression', function(){
         .def('rp', /^\)$/)
         .string('()')
         .start();
-        var tokens = [];
+
         while(!lexer.eof) {
           lexer.next();
-          tokens.push(lexer.token);
         }
-        assert(tokens === lexer.tokens)
+
+        assert(lexer.tokens = ['lp', 'rp', 'EOF'])
+    });
+
+    it('should lex two tokens and skip the whitespace in between them', function(){
+
+      var lexer = Lexer.init()
+        .def('string', new RegExp("^\"[^\"]*\"|\'[^\']*\'$"))
+        .def('whitespace', /^[\t \n]$/, true)
+        .def('pipe', /^[\|]$/)
+        .string('str |')
+        .start()
+
+        while(!lexer.eof) {
+          lexer.next();
+        }
+
+        assert(lexer.tokens = ['string', 'rp', 'EOF']);
     });
 
   });
