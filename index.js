@@ -89,6 +89,7 @@ S.prototype.parse = function(str, $scope) {
   // Create a new Lexer;
   var lexer = Lexer.init()
     .def('whitespace', /^[\t \n]$/, true)
+    .def('comma', /^[\,]$/)
     .def('key', /^[A-Za-z0-9\-]+:$/)
     .def('string', /^[A-Za-z0-9\-]+$/)
     .def('pipe', /^[\|]$/)
@@ -134,12 +135,27 @@ S.prototype.parse = function(str, $scope) {
         throw new Error("Invalid Expression. Array name must be a string");
       }
 
-      console.log(key, arr);
+      currentContext.push({type: 'start', values: [key, arr]});
+
+      lexer.next();
+
+
+      var isArgs = false;
+      if (lexer.token === 'comma') {
+        isArgs = true;
+      }
+
+      if (isArgs) {
+        lexer.next();
+
+
+      }
+
     }
 
   }
-
+  console.log(currentContext);
 };
 
-s('list').parse('user in users');
+s('list').parse('user in users, ()');
 
