@@ -7,7 +7,8 @@ var operator = require('tower-operator')
   , escapeRegExp = 'undefined' === typeof window
     ? require('escape-regexp-component')
     : require('escape-regexp')
-  , Lexer = require('./lib/lexer');
+  , Lexer = require('./lib/lexer')
+  , expression = require('./lib/expression');
 
 /**
  * Expose `expression`.
@@ -37,7 +38,7 @@ exports.collection = [];
  * Export Constructor
  */
 
-exports.Expression = Expression;
+exports.s = s;
 
 /**
  * Parse a directive expression.
@@ -56,7 +57,7 @@ exports.Expression = Expression;
  *   ```
  */
 
-function expression(name, fn) {
+function s(name, fn) {
   if (!name) name = id++;
 
   if (exports.collection[name])
@@ -67,26 +68,3 @@ function expression(name, fn) {
     fn: fn
   });
 }
-
-
-/**
- * Expression Constructor
- *
- * @param {Object} options
- */
-
-function Expression(options) {
-  this.name = options.name;
-  this.fn = options.fn;
-
-
-
-}
-
-/**
- * Parse a given expression.
- */
-
-Expression.prototype.parse = function() {
-
-};
