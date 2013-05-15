@@ -8,7 +8,9 @@ var operator = require('tower-operator')
     ? require('escape-regexp-component')
     : require('escape-regexp')
   , Lexer = require('./lib/lexer')
-  , expression = require('./lib/expression');
+  , expression = require('./lib/expression')
+  , Node = require('./lib/node')
+  , TreeGraph = require('./lib/tree');
 
 /**
  * Expose `expression`.
@@ -21,6 +23,18 @@ exports = module.exports = expression;
  */
 
 exports.Lexer = Lexer;
+
+/**
+ * Expose `Node`.
+ */
+
+exports.Node = Node;
+
+/**
+ * Expose `TreeGraph`.
+ */
+
+exports.TreeGraph = TreeGraph;
 
 /**
  * ID used for non-named expressions
@@ -84,7 +98,8 @@ function S(options) {
  */
 
 S.prototype.parse = function(str, $scope) {
-  var result = [];
+  var tree = new TreeGraph();
+
 
 /**
   // Create a new Lexer;

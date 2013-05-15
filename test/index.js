@@ -1,7 +1,9 @@
 var expression = 'undefined' == typeof window
   ? require('..')
   : require('tower-expression')
-  , Lexer = expression.Lexer;
+  , Lexer = expression.Lexer
+  , Node = expression.Node
+  , TreeGraph = expression.TreeGraph;
 
 var assert = 'undefined' == typeof window
   ? require('assert')
@@ -12,6 +14,46 @@ var assert = 'undefined' == typeof window
 var scopes = require('tower-scope');
 
 describe('expression', function(){
+
+  describe('node', function(){
+
+    it('should create a new node.', function(){
+      var node = Node.init();
+
+      assert(node instanceof Node);
+    });
+
+    it('should have a parent node.', function(){
+      var node = Node.init({
+        parent: Node.init()
+      });
+
+      assert(node.parent instanceof Node);
+    });
+
+    it('should have child node.', function(){
+      var child = Node.init();
+      var node = Node.init()
+        .child(child);
+
+      assert(node.children[0] === child);
+    });
+
+    it('should assign parents when defining as a child', function(){
+      var child = Node.init();
+      var node = Node.init()
+        .child(child);
+
+      assert(child.parent === node);
+    });
+
+  });
+
+  describe('tree', function(){
+
+
+
+  });
 
   describe('lexer', function(){
 
