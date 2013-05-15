@@ -63,8 +63,83 @@ function s(name, fn) {
   if (exports.collection[name])
     return exports.collection[name];
 
-  return exports.collection[name] = new Expression({
+  return exports.collection[name] = new S({
     name: name,
     fn: fn
   });
 }
+
+/**
+ * S Constructor
+ */
+
+function S(options) {
+  this.name = options.name;
+  this.fn = options.fn;
+}
+
+/**
+ * Parse the following s expression. This will fire up
+ * the expression found.
+ */
+
+S.prototype.parse = function(str, $scope) {
+  console.log(str);
+
+  // Create a new Lexer;
+  var lexer = Lexer.init()
+    .def('whitespace', /^[\t \n]$/, true)
+    .def('key', /^[A-Za-z0-9\-]+:$/)
+    .def('string', /^[A-Za-z0-9\-]+$/)
+    .def('pipe', /^[\|]$/)
+    .string(str)
+    .start();
+
+  var beg = true;
+  var inContext = false;
+  var currentContext = [];
+  while(!lexer.eof) {
+    lexer.next();
+
+    if (lexer.token === 'EOF') {
+      lexer.next();
+      break;
+    }
+
+    if (inContext) {
+      // Within a pipe;
+      console.log(lexer.token);
+    }
+
+    if (lexer.token === 'pipe') {
+      beg = false;
+      inContext = true;
+    }
+
+    if (beg) {
+      var key, arr;
+      if (lexer.token === 'string') {
+        key = lexer.lexeme;
+      } else {
+        throw new Error("Invalid Expression. Key name must be a string.");
+      }
+
+      // We don't care about the `in` string
+      lexer.next();
+      lexer.next();
+
+      if (lexer.token === 'string') {
+        arr = lexer.lexeme;
+      } else {
+        throw new Error("Invalid Expression. Array name must be a string");
+      }
+
+      console.log(key, arr);
+    }
+
+  }
+
+};
+
+s('list').parse('user in users');
+
