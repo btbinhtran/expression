@@ -3,7 +3,7 @@ var expression = 'undefined' == typeof window
   : require('tower-expression')
   , Lexer = expression.Lexer
   , Node = expression.Node
-  , TreeGraph = expression.TreeGraph;
+  , Graph = expression.TreeGraph;
 
 var assert = 'undefined' == typeof window
   ? require('assert')
@@ -18,30 +18,30 @@ describe('expression', function(){
   describe('node', function(){
 
     it('should create a new node.', function(){
-      var node = Node.init();
+      var node = new Node();
 
       assert(node instanceof Node);
     });
 
     it('should have a parent node.', function(){
-      var node = Node.init({
-        parent: Node.init()
+      var node = new Node({
+        parent: new Node()
       });
 
       assert(node.parent instanceof Node);
     });
 
     it('should have child node.', function(){
-      var child = Node.init();
-      var node = Node.init()
+      var child = new Node();
+      var node = new Node()
         .child(child);
 
       assert(node.children[0] === child);
     });
 
     it('should assign parents when defining as a child', function(){
-      var child = Node.init();
-      var node = Node.init()
+      var child = new Node();
+      var node = new Node()
         .child(child);
 
       assert(child.parent === node);
@@ -50,6 +50,62 @@ describe('expression', function(){
   });
 
   describe('tree', function(){
+
+    it('should create a new tree graph', function(){
+      var graph = new Graph();
+      assert(graph instanceof Graph);
+    });
+
+    it('should add a node to the graph', function(){
+      var graph = new Graph()
+        .node(new Node());
+
+      assert(graph.nodes[0] instanceof Node);
+    });
+
+    it('should add a parent -> child node to the graph', function(){
+      var child = new Node()
+        , parent = new Node()
+          .child(child)
+        , graph = new Graph()
+        .node(parent);
+
+      assert(graph.nodes[0] === parent);
+      assert(graph.nodes[0].children[0] === child);
+    });
+
+    it('should traverse a few child nodes.', function(){
+      /**
+       *      Tree
+       *        |
+       *      Node A
+       *       /  \
+       *      B    C
+       *    /       \
+       *   D         E
+       */
+
+       var A = new Node()
+        ,  B = new Node()
+        ,  C = new Node()
+        ,  D = new Node()
+        ,  E = new Node();
+
+      C.child(E);
+      B.child(D);
+
+      A.child(B);
+      A.child(C);
+
+      var graph = new Graph()
+        .root(A);
+
+      graph
+    });
+
+  });
+
+  describe('ast', function(){
 
 
 
