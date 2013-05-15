@@ -84,17 +84,32 @@ function S(options) {
  */
 
 S.prototype.parse = function(str, $scope) {
-  console.log(str);
+  var _str = str;
+  str = str.split('|');
+  str = str[0];
+
+  function parseBeginning(s) {
+
+  }
+
+  function parseRest(s) {
+
+  }
+
 
   // Create a new Lexer;
   var lexer = Lexer.init()
     .def('whitespace', /^[\t \n]$/, true)
     .def('comma', /^[\,]$/)
-    .def('key', /^[A-Za-z0-9\-]+:$/)
+    .def('number', /^[0-9]+$/)
+    .def('key', /^[A-Za-z0-9\-]+[:]$/)
+    .def('leftParanthesis', /^\($/)
+    .def('rightParanthesis', /^\)$/)
     .def('string', /^[A-Za-z0-9\-]+$/)
     .def('pipe', /^[\|]$/)
     .string(str)
     .start();
+
 
   var beg = true;
   var inContext = false;
@@ -142,12 +157,18 @@ S.prototype.parse = function(str, $scope) {
 
       var isArgs = false;
       if (lexer.token === 'comma') {
-        isArgs = true;
-      }
-
-      if (isArgs) {
+        var args = [];
         lexer.next();
 
+        if (lexer.token === 'leftParanthesis') {
+
+          while(lexer.token !== 'rightParanthesis' && lexer.token !== 'pipe' && lexer.token !== 'EOF') {
+            lexer.next();
+            console.log(lexer.token);
+            args.push(lexer.lexeme);
+          }
+
+        }
 
       }
 
@@ -157,5 +178,5 @@ S.prototype.parse = function(str, $scope) {
   console.log(currentContext);
 };
 
-s('list').parse('user in users, ()');
+s('list').parse('user in users, (max: 10)');
 
