@@ -107,7 +107,22 @@ describe('expression', function(){
 
   describe('ast', function(){
 
+    it('should build a simple AST', function(){
 
+      var graph = new Graph();
+
+      var lexer = Lexer.init()
+        .def('whitespace', /^[\t \n]$/, true)
+        .def('plus', /^[\+]$/)
+        .def('number', /^[0-9]+$/)
+        .string('1 + 1')
+        .start();
+
+      while(!lexer.eof) {
+        lexer.next();
+      }
+
+    });
 
   });
 
@@ -131,7 +146,8 @@ describe('expression', function(){
 
         while(!lexer.eof) {
           lexer.next();
-          assert(lexer.token === Lexer.definitions.comma);
+          if (!lexer.eof)
+            assert(lexer.lexeme === ",");
         }
 
     });
@@ -139,13 +155,18 @@ describe('expression', function(){
     it('should skip whitespace', function(){
       var lexer = Lexer.init()
         .def('whitespace', /^[\t \n]$/, true)
+        .def('letter', /^[A-Za-z]$/)
         .string('h h')
         .start();
 
+        var arr = [];
         while(!lexer.eof) {
           lexer.next();
-          assert(lexer.token === 'EOF');
+          if (lexer.token !== 'EOF')
+            arr.push(lexer.token);
         }
+
+        assert(arr[0] === 'letter' && arr[1] === 'letter');
     });
 
     it('should not skip an identifier', function(){
@@ -156,7 +177,8 @@ describe('expression', function(){
 
         while(!lexer.eof) {
           lexer.next();
-          assert(lexer.token === Lexer.definitions['squareleftbracket']);
+          if (!lexer.eof)
+            assert(lexer.lexeme === '[' );
         }
     });
 
@@ -170,7 +192,8 @@ describe('expression', function(){
 
         while(!lexer.eof) {
           lexer.next();
-          assert(lexer.token === Lexer.definitions['squarerightbracket']);
+          if (!lexer.eof)
+            assert(lexer.lexeme === ']');
         }
 
     });
